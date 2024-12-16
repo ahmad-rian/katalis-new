@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class Member extends Model
 {
@@ -16,17 +17,17 @@ class Member extends Model
         'batch_year',
         'faculty',
         'study_program',
-        'profile_image', // Tambahkan kolom untuk menyimpan path gambar
+        'profile_image',
     ];
+
     protected $appends = ['profile_image_url'];
 
-    // Casts untuk memastikan data batch_year selalu integer
     protected $casts = [
         'batch_year' => 'integer',
     ];
 
     /**
-     * Scope untuk filter berdasarkan angkatan.
+     * Filter members by batch year
      */
     public function scopeByBatch($query, $year)
     {
@@ -34,7 +35,7 @@ class Member extends Model
     }
 
     /**
-     * Scope untuk filter berdasarkan fakultas.
+     * Filter members by faculty
      */
     public function scopeByFaculty($query, $faculty)
     {
@@ -42,7 +43,7 @@ class Member extends Model
     }
 
     /**
-     * Scope untuk filter berdasarkan program studi.
+     * Filter members by study program
      */
     public function scopeByStudyProgram($query, $program)
     {
@@ -50,13 +51,28 @@ class Member extends Model
     }
 
     /**
-     * Akses URL gambar profil.
+     * Get profile image URL
+     *
+     * @return string
      */
     public function getProfileImageUrlAttribute()
     {
-        // Mengembalikan URL gambar jika ada, atau placeholder jika tidak ada
-        return $this->profile_image
-            ? asset('storage/' . $this->profile_image)
-            : asset('images/default-profile.png'); // Placeholder default
+        if ($this->profile_image && Storage::disk('public')->exists($this->profile_image)) {
+            return asset('storage/' . $this->profile_image);
+        }
+
+        return asset('images/default-profile.png');
+    }
+
+    /**
+     * Format member data for API response
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        $data = parent::toArray();
+        $data['profile_image_url'] = $this->profile_image_url;
+        return $data;
     }
 }

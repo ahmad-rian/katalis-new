@@ -15,4 +15,14 @@ class Event extends Model
         'jenis',
         'gambar',
     ];
+
+    protected $appends = ['image_url'];
+
+    public function getImageUrlAttribute()
+    {
+        if ($this->gambar) {
+            return asset('storage/' . $this->gambar);
+        }
+        return null;
+    }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pos_con/controllers/event_controller.dart';
 import 'package:pos_con/controllers/member_controller.dart';
 import 'package:pos_con/views/dashboard_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,7 +15,7 @@ import 'package:pos_con/views/onboarding/welcome_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initServices();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 Future<void> initServices() async {
@@ -30,6 +31,7 @@ Future<void> initServices() async {
     Get.put(AuthController(), permanent: true);
     Get.put(ProfileController(), permanent: true);
     Get.put(MemberController(), permanent: true);
+    Get.put(EventController(), permanent: true);
     print('Controllers initialized');
 
     print('All services initialized');
@@ -117,7 +119,6 @@ class MyApp extends StatelessWidget {
         name: '/login',
         page: () => LoginView(),
         transition: Transition.fadeIn,
-        middlewares: [NoAuthMiddleware()],
         binding: BindingsBuilder(() {
           Get.put(AuthController());
         }),
@@ -126,7 +127,6 @@ class MyApp extends StatelessWidget {
         name: '/register',
         page: () => RegisterView(),
         transition: Transition.rightToLeft,
-        middlewares: [NoAuthMiddleware()],
         binding: BindingsBuilder(() {
           Get.put(AuthController());
         }),
@@ -156,26 +156,10 @@ class MyApp extends StatelessWidget {
 class AuthMiddleware extends GetMiddleware {
   @override
   RouteSettings? redirect(String? route) {
-    if (AuthController.to.isLoggedIn) return null;
-    return const RouteSettings(name: '/login');
-  }
-}
-
-class NoAuthMiddleware extends GetMiddleware {
-  @override
-  RouteSettings? redirect(String? route) {
-    final prefs = Get.find<SharedPreferences>();
-    final hasSeenOnboarding = prefs.getBool('hasSeenOnboarding') ?? false;
-
-    if (!hasSeenOnboarding) {
-      return const RouteSettings(name: '/welcome');
+    if (!AuthController.to.isLoggedIn &&
+        (route == '/dashboard' || route == '/profile')) {
+      return const RouteSettings(name: '/login');
     }
-
-    if (AuthController.to.isLoggedIn &&
-        (route == '/login' || route == '/register')) {
-      return const RouteSettings(name: '/dashboard');
-    }
-
     return null;
   }
 }

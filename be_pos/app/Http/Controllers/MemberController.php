@@ -4,68 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Member;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class MemberController extends Controller
 {
     public function __construct()
     {
-        // Middleware auth dan role:admin hanya untuk metode tertentu
-        $this->middleware(['auth', 'role:admin'])->only(['create', 'store', 'edit', 'update', 'destroy']);
+        $this->middleware(['auth', 'role:admin']);
     }
 
     public function index()
     {
         $members = Member::latest()->paginate(10);
         return view('members.index', compact('members'));
-    }
-
-    public function indexApi(Request $request)
-    {
-        try {
-            $members = Member::query();
-
-            if ($request->has('nim')) {
-                $members->where('nim', 'like', '%' . $request->query('nim') . '%');
-            }
-
-            $members = $members->latest()->get();
-
-            return response()->json([
-                'status' => true,
-                'data' => $members,
-                'message' => 'Members retrieved successfully'
-            ], 200);
-        } catch (\Exception $e) {
-            Log::error('Error retrieving members: ' . $e->getMessage());
-            return response()->json([
-                'status' => false,
-                'message' => 'Failed to retrieve members'
-            ], 500);
-        }
-    }
-
-    public function search(Request $request)
-    {
-        try {
-            $query = $request->query('query');
-            $members = Member::where('nim', 'like', "%$query%")
-                ->orWhere('name', 'like', "%$query%")
-                ->get();
-
-            return response()->json([
-                'status' => true,
-                'data' => $members,
-                'message' => 'Search successful'
-            ], 200);
-        } catch (\Exception $e) {
-            Log::error('Error searching members: ' . $e->getMessage());
-            return response()->json([
-                'status' => false,
-                'message' => 'Search failed'
-            ], 500);
-        }
     }
 
     public function create()
@@ -111,7 +62,7 @@ class MemberController extends Controller
         ]);
 
         if ($request->hasFile('profile_image')) {
-            if ($member->profile_image && Storage::disk('public')->exists($member->profile_image)) {
+            if ($member->profile_image) {
                 Storage::disk('public')->delete($member->profile_image);
             }
             $validated['profile_image'] = $request->file('profile_image')->store('profiles', 'public');

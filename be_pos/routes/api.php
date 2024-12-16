@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\API\ProfileController;
+use App\Http\Controllers\API\EventApiController;
+use App\Http\Controllers\API\MemberApiController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\API\DashboardController;
 use App\Http\Controllers\API\TransactionController;
@@ -23,8 +25,18 @@ use App\Http\Controllers\API\ProductController;
 // Public routes
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
-Route::get('/members', [MemberController::class, 'indexApi']);
-Route::get('/members/search', [MemberController::class, 'search']);
+// Public routes
+Route::controller(MemberApiController::class)->prefix('members')->group(function () {
+    Route::get('/', 'index');
+    Route::get('/search', 'search');
+});
+
+
+// Event public routes
+Route::controller(EventApiController::class)->prefix('events')->group(function () {
+    Route::get('/kegiatan', 'getKegiatan');
+    Route::get('/lomba-beasiswa', 'getLombaBeasiswa');
+});
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {

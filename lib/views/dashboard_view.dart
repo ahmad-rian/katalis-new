@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pos_con/views/event/event_screen.dart';
 import 'package:pos_con/views/nim/nimfinder_screen.dart';
 import 'package:pos_con/views/profile/profile_view.dart';
 
@@ -22,7 +23,7 @@ class _DashboardViewState extends State<DashboardView> {
   final List<Widget> _screens = [
     _DashboardHome(),
     NimFinderScreen(),
-    Center(child: Text('Announcement')),
+    EventScreen(),
     ProfileView(),
   ];
 
@@ -239,9 +240,9 @@ class _DashboardViewState extends State<DashboardView> {
                     index: 1,
                   ),
                   _buildNavItem(
-                    icon: Icons.notifications_outlined,
-                    selectedIcon: Icons.notifications,
-                    label: 'Announce',
+                    icon: Icons.campaign_outlined,
+                    selectedIcon: Icons.campaign,
+                    label: 'Event',
                     index: 2,
                   ),
                   _buildNavItem(
