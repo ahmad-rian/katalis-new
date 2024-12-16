@@ -1,0 +1,82 @@
+@layer components {
+    .sidebar {
+        @apply fixed inset-y-0 left-0 z-30 w-72 bg-white border-r border-gray-100 shadow-sm font-sans transition-all duration-300 ease-in-out;
+    }
+
+    .sidebar-brand {
+        @apply flex items-center h-16 px-6 bg-gray-50/50 border-b border-gray-100;
+    }
+
+    .sidebar-brand-text {
+        @apply text-xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent;
+    }
+
+    .sidebar-nav {
+        @apply flex flex-col h-[calc(100%-4rem)] px-4 py-6 space-y-1 overflow-y-auto;
+    }
+
+    .nav-section {
+        @apply space-y-2 mb-6;
+    }
+
+    .nav-link {
+        @apply flex items-center px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500/20;
+    }
+
+    .nav-link-active {
+        @apply text-white bg-gradient-to-r from-primary-600 to-primary-700 shadow-sm;
+    }
+
+    .nav-link-inactive {
+        @apply text-gray-600 hover:bg-gray-50;
+    }
+
+    .nav-icon {
+        @apply mr-3 h-5 w-5 transition-colors duration-200;
+    }
+
+    .nav-icon-active {
+        @apply text-white;
+    }
+
+    .nav-icon-inactive {
+        @apply text-gray-400;
+    }
+
+    .profile-section {
+        @apply border-t border-gray-100 mt-auto bg-gray-50/50;
+    }
+
+    .profile-button {
+        @apply w-full flex items-center px-4 py-3 hover:bg-white/80 transition-colors duration-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20;
+    }
+
+    .profile-dropdown {
+        @apply absolute top-[calc(100%+0.5rem)] left-0 right-0 mx-4 py-2 bg-white rounded-xl shadow-lg border border-gray-100/50 backdrop-blur-sm z-50;
+        transform-origin: top center;
+    }
+
+    .dropdown-item {
+        @apply flex items-center w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500/20;
+    }
+
+    .profile-avatar {
+        @apply w-10 h-10 rounded-xl bg-gradient-to-r from-primary-600 to-primary-700 flex items-center justify-center text-white font-medium;
+    }
+
+    .profile-info {
+        @apply ml-3 flex-1 min-w-0;
+    }
+
+    .profile-name {
+        @apply text-sm font-semibold text-gray-900 truncate;
+    }
+
+    .profile-email {
+        @apply text-xs text-gray-500 truncate;
+    }
+
+    .dropdown-icon {
+        @apply mr-3 h-5 w-5 text-gray-400;
+    }
+}

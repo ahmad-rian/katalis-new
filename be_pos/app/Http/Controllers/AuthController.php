@@ -22,7 +22,12 @@ class AuthController extends Controller
 
             return response()->json([
                 'token' => $token,
-                'user' => $user,
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'avatar' => $user->avatar_url,
+                ],
             ], 200);
         }
 
@@ -43,13 +48,22 @@ class AuthController extends Controller
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
             'password' => Hash::make($validatedData['password']),
+            'avatar' => 'images/default-profile.png', // Set default avatar
         ]);
+
+        // Assign default role if needed
+        $user->assignRole('user');
 
         $token = $user->createToken('auth-token')->plainTextToken;
 
         return response()->json([
             'message' => 'Registration successful',
-            'user' => $user,
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'avatar' => $user->avatar_url,
+            ],
             'token' => $token,
         ], 201);
     }
@@ -57,7 +71,6 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         try {
-            // Revoke all tokens...
             $request->user()->currentAccessToken()->delete();
 
             return response()->json([
