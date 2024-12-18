@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:pos_con/controllers/event_controller.dart';
 import 'package:pos_con/controllers/member_controller.dart';
+import 'package:pos_con/controllers/post_controller.dart';
 import 'package:pos_con/views/dashboard_view.dart';
+import 'package:pos_con/views/post/post_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pos_con/controllers/auth_controller.dart';
 import 'package:pos_con/controllers/profile_controller.dart';
@@ -14,6 +17,8 @@ import 'package:pos_con/views/onboarding/welcome_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await GetStorage.init();
   await initServices();
   runApp(const MyApp());
 }
@@ -22,16 +27,18 @@ Future<void> initServices() async {
   try {
     print('Starting services initialization...');
 
-    // Initialize SharedPreferences
+    // Initialize storage services
     final prefs = await SharedPreferences.getInstance();
     await Get.putAsync(() async => prefs);
-    print('SharedPreferences initialized');
+    Get.put(GetStorage());
+    print('Storage services initialized');
 
     // Initialize controllers
     Get.put(AuthController(), permanent: true);
     Get.put(ProfileController(), permanent: true);
     Get.put(MemberController(), permanent: true);
     Get.put(EventController(), permanent: true);
+    Get.put(PostController(), permanent: true);
     print('Controllers initialized');
 
     print('All services initialized');
@@ -147,6 +154,13 @@ class MyApp extends StatelessWidget {
         middlewares: [AuthMiddleware()],
         binding: BindingsBuilder(() {
           Get.put(ProfileController());
+        }),
+      ),
+      GetPage(
+        name: '/post',
+        page: () => PostScreen(),
+        binding: BindingsBuilder(() {
+          Get.lazyPut(() => PostController());
         }),
       ),
     ];

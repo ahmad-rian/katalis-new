@@ -1,32 +1,35 @@
-// welcome_screen.dart
 import 'package:flutter/material.dart';
-
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:pos_con/views/onboarding/onboarding_view.dart';
+import 'package:get/get.dart'; // Tambahkan ini
 
-class WelcomeScreen extends StatelessWidget {
+class WelcomeScreen extends StatefulWidget {
+  // Ubah ke StatefulWidget
+  @override
+  State<WelcomeScreen> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Pindahkan Future.delayed ke initState
+    Future.delayed(Duration(seconds: 3), () {
+      if (mounted) {
+        // Cek apakah widget masih mounted
+        Get.off(
+          // Gunakan Get.off sebagai pengganti Navigator.pushReplacement
+          () => OnboardingScreen(),
+          transition: Transition.rightToLeft,
+          duration: Duration(milliseconds: 800),
+          curve: Curves.easeInOutCubic,
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    Future.delayed(Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) =>
-                OnboardingScreen(),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-              const begin = Offset(1.0, 0.0);
-              const end = Offset.zero;
-              const curve = Curves.easeInOutCubic;
-              var tween =
-                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-              return SlideTransition(
-                  position: animation.drive(tween), child: child);
-            },
-            transitionDuration: Duration(milliseconds: 800),
-          ));
-    });
-
     return Scaffold(
       backgroundColor: Colors.blue[900],
       body: Container(

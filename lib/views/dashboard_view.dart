@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pos_con/views/event/event_screen.dart';
 import 'package:pos_con/views/nim/nimfinder_screen.dart';
+import 'package:pos_con/views/post/post_screen.dart';
 import 'package:pos_con/views/profile/profile_view.dart';
 
 class DashboardView extends StatefulWidget {
@@ -21,7 +22,7 @@ class _DashboardViewState extends State<DashboardView> {
 
   // Replace these with your actual screens
   final List<Widget> _screens = [
-    _DashboardHome(),
+    PostScreen(key: UniqueKey()),
     NimFinderScreen(),
     EventScreen(),
     ProfileView(),

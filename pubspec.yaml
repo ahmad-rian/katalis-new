@@ -48,6 +48,7 @@ dependencies:
   http_parser: ^4.0.2
   get_storage: ^2.1.1
   animate_do: ^3.3.4
+  timeago: ^3.5.0
 
 dev_dependencies:
   flutter_test:
